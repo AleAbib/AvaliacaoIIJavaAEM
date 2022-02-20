@@ -86,7 +86,7 @@ public class ProdutoDAO {
 		try{
 			List<Produto> produtos = new ArrayList<Produto>();
 
-			try (PreparedStatement pstm = connection.prepareStatement("SELECT * FROM PRODUTO WHERE DESCRICAO LIKE ?")) {
+			try (PreparedStatement pstm = connection.prepareStatement("SELECT * FROM PRODUTO WHERE UPPER(NOME) LIKE ?")) {
 				pstm.setString(1, palavra);
 				pstm.execute();
 

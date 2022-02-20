@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import questao9.model.Produto;
+import questao9.Exception.InvalidLetterException;
 import questao9.controller.ProdutoController;
+import questao9.model.Produto;
 
 public class Iteracao {
 
@@ -35,12 +36,20 @@ public class Iteracao {
 					+ "1 - para INSERIR uma nova oferta\n" + "2 - para ATUALIZAR uma oferta\n"
 					+ "3 - para DELETAR uma oferta\n" + "4 - para LISTAR os produtos que contém: \n" + "0 - para SAIR");
 			opcao = 0;
-			opcao = leDados.nextInt();
+			try{
+				opcao = leDados.nextInt();
+			} catch (Exception ex) {
+				throw new InvalidLetterException("Variável só recebe números como entrada!");
+			}
 			
-			System.out.println("Digite o id do produto: ");
-			id = leDados.nextInt();
 			switch (opcao) {
 			case 1:
+				try{
+					System.out.println("Digite o id do produto: ");
+					id = leDados.nextInt();
+				} catch (Exception ex) {
+					throw new InvalidLetterException("Variável só recebe números como entrada!");
+				}
 				if (!buscarId(id).isEmpty()) {
 					System.err.println("Usuário já existe.");
 				}else {
@@ -49,12 +58,24 @@ public class Iteracao {
 				}
 				break;
 			case 2:
+				try{
+					System.out.println("Digite o id do produto: ");
+					id = leDados.nextInt();
+				} catch (Exception ex) {
+					throw new InvalidLetterException("Variável só recebe números como entrada!");
+				}
 				if (buscarId(id).isEmpty()) {
 					inserir(id);
 				}
 				atualizar(id);
 				break;
 			case 3:
+				try{
+					System.out.println("Digite o id do produto: ");
+					id = leDados.nextInt();
+				} catch (Exception ex) {
+					throw new InvalidLetterException("Variável só recebe números como entrada!");
+				}
 				if (buscarId(id).isEmpty()) {
 					System.err.println("Usuário não existe no banco.");
 				}else {
@@ -103,28 +124,34 @@ public class Iteracao {
 		String descricao;
 		float desconto, valor;
 		Date data;
+		
+		try {
+			leDados.nextLine();
+			
+			System.out.println("Digite o nome: ");
+			nome = leDados.nextLine();
 
-		leDados.nextLine();
+			System.out.println("Digite a descrição: ");
+			descricao = leDados.nextLine();
 
-		System.out.println("Digite o nome: ");
-		nome = leDados.nextLine();
+			System.out.println("Digite o valor do produto: ");
+			valor = leDados.nextFloat();
 
-		System.out.println("Digite a descrição: ");
-		descricao = leDados.nextLine();
+			System.out.println("Digite o desconto: ");
+			desconto = leDados.nextFloat();
+			
+			data = data();
 
-		System.out.println("Digite o valor do produto: ");
-		valor = leDados.nextFloat();
+			Produto produto = new Produto(id, nome, descricao, desconto, valor, data);
 
-		System.out.println("Digite o desconto: ");
-		desconto = leDados.nextFloat();
+			this.produtoController.inserir(produto);
 
-		data = data();
-
-		Produto produto = new Produto(id, nome, descricao, desconto, valor, data);
-
-		this.produtoController.inserir(produto);
-
-		System.out.println("Produto Salvo com sucesso!\n");
+			System.out.println("Produto Salvo com sucesso!\n");
+		} catch (Exception ex) {
+			System.err.println("Erro de inicialização de variáveis");
+			leDados.nextLine();
+			menu();
+		}
 	}
 
 	private void atualizar(int id) {
@@ -133,29 +160,32 @@ public class Iteracao {
 		String descricao;
 		float desconto, valor;
 
-		leDados.nextLine();
+		try {
+			leDados.nextLine();
 
-		System.out.println("Digite o nome: ");
-		nome = leDados.nextLine();
+			System.out.println("Digite o nome: ");
+			nome = leDados.nextLine();
 
-		System.out.println("Digite a descrição: ");
-		descricao = leDados.nextLine();
+			System.out.println("Digite a descrição: ");
+			descricao = leDados.nextLine();
 
-		System.out.println("Digite o valor do produto: ");
-		valor = leDados.nextFloat();
+			System.out.println("Digite o valor do produto: ");
+			valor = leDados.nextFloat();
 
-		System.out.println("Digite o novo desconto: ");
-		desconto = leDados.nextFloat();
+			System.out.println("Digite o novo desconto: ");
+			desconto = leDados.nextFloat();
 
-		this.produtoController.atualizar(nome, descricao, id, desconto, valor);
+			this.produtoController.atualizar(nome, descricao, id, desconto, valor);
 
-		System.out.println("Produto Alterado com sucesso!\n");
+			System.out.println("Produto Alterado com sucesso!\n");
+		} catch (Exception ex) {
+			System.err.println("Erro de inicialização de variáveis");
+			leDados.nextLine();
+			menu();
+		}
 	}
 
 	private void excluir(int id) {
-
-		System.out.println("Digite o id do produto: ");
-		id = leDados.nextInt();
 
 		this.produtoController.excluir(id);
 
@@ -170,7 +200,7 @@ public class Iteracao {
 
 		leDados.nextLine();
 
-		palavra = leDados.nextLine();
+		palavra = "%" + leDados.nextLine() + "%";
 		String[] stringPalavras = palavra.split(" ");
 
 		for (int i = 0; i < stringPalavras.length; i++) {
